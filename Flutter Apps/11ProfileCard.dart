@@ -61,3 +61,36 @@ class UserProfile extends StatelessWidget {
     );
   }
 }
+
+//to add the name into a container with a border, replace the SizedBox with the following container code:
+/*
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black,  // Choose the border color
+              width: 1,  // Adjust the border width as needed
+            ),
+          ),
+          child: SizedBox(
+            height: 50,
+            width: 200,
+            child: Center(
+              child: Text(
+                'Dr. M.S.Ramaiah',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Founder Chairman',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey,
+          ),
+        ),
+*/
