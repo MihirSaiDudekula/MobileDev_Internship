@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text('Contact Us'),
               onTap: () {
                 
-                Navigator.pop(context);
+                // Navigator.pop(context);
                 // By toggling showContactInfo from true to false or vice versa, you control whether the contact information is displayed or hidden.
                 setState(() {
                   showContactInfo = !showContactInfo;
