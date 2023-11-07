@@ -70,6 +70,21 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showContactInfoScreen(BuildContext context) {
+    // Navigate to the ContactScreen and pass contact information
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ContactScreen(
+          name: 'Your Name',
+          phoneNumber: '+9196329XXXXX',
+          email: 'anireccapp@gmail.com',
+          location: 'Your Location',
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,16 +142,10 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.contact_mail),
               title: Text('Contact Us'),
               onTap: () {
-//                 Navigator.pop(context);
-                setState(() {
-                  showContactInfo = !showContactInfo;
-                });
+                Navigator.pop(context);
+                _showContactInfoScreen(context); // Navigate to the contact screen
               },
             ),
-            if (showContactInfo)
-              ListTile(
-                title: Text('Phone: +9196329XXXXX\nEmail: anireccapp@gmail.com'),
-              ),
           ],
         ),
       ),
@@ -294,3 +303,68 @@ class _TodoListState extends State<TodoList> {
   }
 }
 
+class ContactScreen extends StatelessWidget {
+  final String name;
+  final String phoneNumber;
+  final String email;
+  final String location;
+
+  ContactScreen({
+    required this.name,
+    required this.phoneNumber,
+    required this.email,
+    required this.location,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Contact Info'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Name:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              name,
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Phone Number:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              phoneNumber,
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Email:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              email,
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Location:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              location,
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
