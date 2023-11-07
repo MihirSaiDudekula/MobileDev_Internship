@@ -13,6 +13,9 @@ class AppName extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
     );
   }
 }
@@ -76,11 +79,20 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ContactScreen(
-          name: 'Your Name',
-          phoneNumber: '+9196329XXXXX',
-          email: 'anireccapp@gmail.com',
-          location: 'Your Location',
+          name: 'Lokesh and Mihir',
+          phoneNumber: '+919632969420',
+          email: 'todolist@gmail.com',
+          location: 'Bengaluru, India',
         ),
+      ),
+    );
+  }
+
+  void _navigateToSettings(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SettingsScreen(),
       ),
     );
   }
@@ -124,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.blue,
               ),
               child: Text(
-                'Drawer Header',
+                '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -144,6 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 Navigator.pop(context);
                 _showContactInfoScreen(context); // Navigate to the contact screen
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                _navigateToSettings(context);
               },
             ),
           ],
@@ -366,5 +386,62 @@ class ContactScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SettingsScreen extends StatefulWidget {
+  @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool isDarkModeEnabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Settings'),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ListTile(
+            title: Text('Dark Mode'),
+            trailing: Switch(
+              value: isDarkModeEnabled,
+              onChanged: (value) {
+                setState(() {
+                  isDarkModeEnabled = value;
+                  if (isDarkModeEnabled) {
+                    // Implement dark mode theme
+                    // For example, you can use ThemeData.dark()
+                    // Update the theme mode
+                    MyApp.setDarkMode();
+                  } else {
+                    // Implement light mode theme
+                    // For example, you can use ThemeData.light()
+                    // Update the theme mode
+                    MyApp.setLightMode();
+                  }
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MyApp {
+  static setDarkMode() {
+    // Implement the dark mode theme and update the theme mode
+    // Example: ThemeData.dark(), themeMode: ThemeMode.dark
+  }
+
+  static setLightMode() {
+    // Implement the light mode theme and update the theme mode
+    // Example: ThemeData.light(), themeMode: ThemeMode.light
   }
 }
