@@ -5,22 +5,50 @@ void main() {
   runApp(AppName());
 }
 
-class AppName extends StatelessWidget {
+class AppName extends StatefulWidget {
+  @override
+  _AppNameState createState() => _AppNameState();
+}
+
+class _AppNameState extends State<AppName> {
+  ThemeMode _currentThemeMode = ThemeMode.system;
+
+  void _toggleTheme() {
+    setState(() {
+      if (_currentThemeMode == ThemeMode.light) {
+        _currentThemeMode = ThemeMode.dark;
+      } else {
+        _currentThemeMode = ThemeMode.light;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-      theme: ThemeData.light(),
+      home: HomeScreen(_toggleTheme, currentThemeMode: _currentThemeMode),
+      theme: ThemeData.light().copyWith(
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white, // Set the background color to white
+          foregroundColor: Colors.red, // Set the text color
+          iconTheme: IconThemeData(color: Colors.red), // Set the icon color
+        ),
+      ),
       darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.system,
+      themeMode: _currentThemeMode,
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
+  final VoidCallback toggleTheme;
+  final ThemeMode currentThemeMode;
+
+  HomeScreen(this.toggleTheme, {required this.currentThemeMode});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -65,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text('Cancel'),
                   ),
                 ],
-              ),
+              )
             ],
           ),
         );
@@ -74,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showContactInfoScreen(BuildContext context) {
-    // Navigate to the ContactScreen and pass contact information
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -92,7 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SettingsScreen(),
+        builder: (context) => SettingsScreen(
+          toggleTheme: widget.toggleTheme,
+          currentThemeMode: widget.currentThemeMode,
+        ),
       ),
     );
   }
@@ -100,9 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFEEEFF5),
       appBar: AppBar(
-        backgroundColor: Color(0xFFEEEFF5),
         elevation: 0,
         title: Text(
           'ToDoList',
@@ -122,7 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   _showAccountMenu(context);
                 },
               ),
-              if (userName.isNotEmpty) Text('Hello $userName', style: TextStyle(color: Colors.red)),
+              if (userName.isNotEmpty)
+                Text('Hello $userName', style: TextStyle(color: Colors.red)),
             ],
           ),
         ],
@@ -133,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.red,
               ),
               child: Text(
                 '',
@@ -155,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text('Contact Us'),
               onTap: () {
                 Navigator.pop(context);
-                _showContactInfoScreen(context); // Navigate to the contact screen
+                _showContactInfoScreen(context);
               },
             ),
             ListTile(
@@ -245,11 +274,11 @@ class _TodoListState extends State<TodoList> {
           child: Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(bottom: 16), // Add spacing here
+                padding: EdgeInsets.only(bottom: 16),
                 child: TextField(
                   controller: taskNameController,
                   decoration: InputDecoration(
-                    labelText: 'Enter Task Name', // Change the label here
+                    labelText: 'Enter Task Name',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -296,7 +325,8 @@ class _TodoListState extends State<TodoList> {
                           todo.name,
                           style: TextStyle(
                             fontSize: 18,
-                            decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
+                            decoration:
+                                todo.isCompleted ? TextDecoration.lineThrough : null,
                           ),
                         ),
                         trailing: Row(
@@ -308,7 +338,9 @@ class _TodoListState extends State<TodoList> {
                               color: Colors.red,
                             ),
                             IconButton(
-                              icon: Icon(todo.isCompleted ? Icons.check_box : Icons.check_box_outline_blank),
+                              icon: Icon(todo.isCompleted
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank),
                               onPressed: () => toggleCompleted(todos.indexOf(todo)),
                             ),
                           ],
@@ -390,6 +422,11 @@ class ContactScreen extends StatelessWidget {
 }
 
 class SettingsScreen extends StatefulWidget {
+  final VoidCallback toggleTheme;
+  final ThemeMode currentThemeMode;
+
+  SettingsScreen({required this.toggleTheme, required this.currentThemeMode});
+
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
@@ -409,39 +446,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             title: Text('Dark Mode'),
             trailing: Switch(
-              value: isDarkModeEnabled,
+              value: widget.currentThemeMode == ThemeMode.dark,
               onChanged: (value) {
-                setState(() {
-                  isDarkModeEnabled = value;
-                  if (isDarkModeEnabled) {
-                    // Implement dark mode theme
-                    // For example, you can use ThemeData.dark()
-                    // Update the theme mode
-                    MyApp.setDarkMode();
-                  } else {
-                    // Implement light mode theme
-                    // For example, you can use ThemeData.light()
-                    // Update the theme mode
-                    MyApp.setLightMode();
-                  }
-                });
+                widget.toggleTheme();
               },
             ),
           ),
         ],
       ),
     );
-  }
-}
-
-class MyApp {
-  static setDarkMode() {
-    // Implement the dark mode theme and update the theme mode
-    // Example: ThemeData.dark(), themeMode: ThemeMode.dark
-  }
-
-  static setLightMode() {
-    // Implement the light mode theme and update the theme mode
-    // Example: ThemeData.light(), themeMode: ThemeMode.light
   }
 }
