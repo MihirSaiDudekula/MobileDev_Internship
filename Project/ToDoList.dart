@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+//for the usage of uioverlaystyle
 import 'package:flutter/services.dart';
 
 void main() {
   runApp(AppName());
 }
-
+//creating a statefulwidget
 class AppName extends StatefulWidget {
   @override
   _AppNameState createState() => _AppNameState();
@@ -12,7 +13,7 @@ class AppName extends StatefulWidget {
 
 class _AppNameState extends State<AppName> {
   ThemeMode _currentThemeMode = ThemeMode.system;
-
+//adding function for toggling between light and dark mode
   void _toggleTheme() {
     setState(() {
       if (_currentThemeMode == ThemeMode.light) {
@@ -28,13 +29,13 @@ class _AppNameState extends State<AppName> {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,// removal of debug from the top right corner
       home: HomeScreen(_toggleTheme, currentThemeMode: _currentThemeMode),
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.white, // Set the background color to white
-          foregroundColor: Colors.red, // Set the text color
-          iconTheme: IconThemeData(color: Colors.red), // Set the icon color
+          backgroundColor: Colors.white, 
+          foregroundColor: Colors.red, 
+          iconTheme: IconThemeData(color: Colors.red), 
         ),
       ),
       darkTheme: ThemeData.dark(),
@@ -42,7 +43,7 @@ class _AppNameState extends State<AppName> {
     );
   }
 }
-
+//  properties for toggling the theme and the current theme mode, allowing the widget to be configured with these settings
 class HomeScreen extends StatefulWidget {
   final VoidCallback toggleTheme;
   final ThemeMode currentThemeMode;
@@ -52,13 +53,13 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-
+//  initializes the index for  tab, a flag to control whether to show contact information, a text controller for creating user accounts, and a user's name stored as an empty string
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   bool showContactInfo = false;
   TextEditingController createAccountController = TextEditingController();
   String userName = '';
-
+ //creating account on top right corner
   void _showAccountMenu(BuildContext context) {
     showDialog(
       context: context,
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
+// displaying information in the contactinfo
   void _showContactInfoScreen(BuildContext context) {
     Navigator.push(
       context,
@@ -129,12 +130,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = widget.currentThemeMode;
+    final isDarkMode = themeMode == ThemeMode.dark;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: Text(
           'ToDoList',
-          style: TextStyle(color: Colors.red),
+          style: TextStyle(color: Colors.red, fontSize: 30),
         ),
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.red),
@@ -156,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      // creating a drawer 
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -172,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            //adding
             ListTile(
               leading: Icon(Icons.home),
               title: Text('Home'),
@@ -198,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: TodoList(),
+      body: TodoList(currentThemeMode: themeMode),
     );
   }
 }
@@ -214,6 +220,10 @@ class Todo {
 }
 
 class TodoList extends StatefulWidget {
+  final ThemeMode currentThemeMode;
+
+  TodoList({required this.currentThemeMode});
+
   @override
   _TodoListState createState() => _TodoListState();
 }
@@ -266,11 +276,14 @@ class _TodoListState extends State<TodoList> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = widget.currentThemeMode;
+    final isDarkMode = themeMode == ThemeMode.dark;
+
     return Column(
       children: <Widget>[
         Container(
           padding: EdgeInsets.all(16),
-          color: Colors.blue[200],
+          color: isDarkMode ? Colors.grey[800] : Colors.blue[200],
           child: Column(
             children: <Widget>[
               Padding(
@@ -280,6 +293,12 @@ class _TodoListState extends State<TodoList> {
                   decoration: InputDecoration(
                     labelText: 'Enter Task Name',
                     border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
               ),
@@ -288,6 +307,12 @@ class _TodoListState extends State<TodoList> {
                 decoration: InputDecoration(
                   labelText: 'Search tasks',
                   border: OutlineInputBorder(),
+                  labelStyle: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white : Colors.black,
                 ),
                 onChanged: (value) {
                   searchTasks();
@@ -298,7 +323,7 @@ class _TodoListState extends State<TodoList> {
                   IconButton(
                     icon: Icon(Icons.add),
                     onPressed: addTask,
-                    color: Colors.blue,
+                    color: isDarkMode ? Colors.white : Colors.blue,
                   ),
                 ],
               ),
@@ -310,7 +335,10 @@ class _TodoListState extends State<TodoList> {
               ? Center(
                   child: Text(
                     'No matching tasks found.',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
                   ),
                 )
               : ListView.builder(
@@ -319,7 +347,9 @@ class _TodoListState extends State<TodoList> {
                     final todo = filteredTodos[index];
                     return Card(
                       margin: EdgeInsets.all(8),
-                      color: todo.isCompleted ? Colors.green : Colors.white,
+                      color: todo.isCompleted
+                          ? isDarkMode ? Colors.green : Colors.green
+                          : isDarkMode ? Colors.grey : Colors.white,
                       child: ListTile(
                         title: Text(
                           todo.name,
@@ -327,6 +357,7 @@ class _TodoListState extends State<TodoList> {
                             fontSize: 18,
                             decoration:
                                 todo.isCompleted ? TextDecoration.lineThrough : null,
+                            color: isDarkMode ? Colors.white : Colors.black,
                           ),
                         ),
                         trailing: Row(
