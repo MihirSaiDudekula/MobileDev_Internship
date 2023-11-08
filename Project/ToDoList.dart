@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+//for the usage of uioverlaystyle
 import 'package:flutter/services.dart';
 
 void main() {
   runApp(AppName());
 }
-
+//creating a statefulwidget
 class AppName extends StatefulWidget {
   @override
   _AppNameState createState() => _AppNameState();
@@ -12,7 +13,7 @@ class AppName extends StatefulWidget {
 
 class _AppNameState extends State<AppName> {
   ThemeMode _currentThemeMode = ThemeMode.system;
-
+//adding function for toggling between light and dark mode
   void _toggleTheme() {
     setState(() {
       if (_currentThemeMode == ThemeMode.light) {
@@ -28,13 +29,13 @@ class _AppNameState extends State<AppName> {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,// removal of debug from the top right corner
       home: HomeScreen(_toggleTheme, currentThemeMode: _currentThemeMode),
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.white, // Set the background color to white
-          foregroundColor: Colors.red, // Set the text color
-          iconTheme: IconThemeData(color: Colors.red), // Set the icon color
+          backgroundColor: Colors.white, 
+          foregroundColor: Colors.red, 
+          iconTheme: IconThemeData(color: Colors.red), 
         ),
       ),
       darkTheme: ThemeData.dark(),
@@ -42,7 +43,7 @@ class _AppNameState extends State<AppName> {
     );
   }
 }
-
+//  properties for toggling the theme and the current theme mode, allowing the widget to be configured with these settings
 class HomeScreen extends StatefulWidget {
   final VoidCallback toggleTheme;
   final ThemeMode currentThemeMode;
@@ -52,13 +53,13 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-
+//  initializes the index for  tab, a flag to control whether to show contact information, a text controller for creating user accounts, and a user's name stored as an empty string
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   bool showContactInfo = false;
   TextEditingController createAccountController = TextEditingController();
   String userName = '';
-
+ //creating account on top right corner
   void _showAccountMenu(BuildContext context) {
     showDialog(
       context: context,
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
+// displaying information in the contactinfo
   void _showContactInfoScreen(BuildContext context) {
     Navigator.push(
       context,
@@ -159,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      // creating a drawer 
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -175,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            //adding
             ListTile(
               leading: Icon(Icons.home),
               title: Text('Home'),
