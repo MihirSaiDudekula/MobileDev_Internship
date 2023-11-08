@@ -129,12 +129,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = widget.currentThemeMode;
+    final isDarkMode = themeMode == ThemeMode.dark;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: Text(
           'ToDoList',
-          style: TextStyle(color: Colors.red),
+          style: TextStyle(color: Colors.red, fontSize: 30),
         ),
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.red),
@@ -198,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: TodoList(),
+      body: TodoList(currentThemeMode: themeMode),
     );
   }
 }
@@ -214,6 +217,10 @@ class Todo {
 }
 
 class TodoList extends StatefulWidget {
+  final ThemeMode currentThemeMode;
+
+  TodoList({required this.currentThemeMode});
+
   @override
   _TodoListState createState() => _TodoListState();
 }
@@ -266,11 +273,14 @@ class _TodoListState extends State<TodoList> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = widget.currentThemeMode;
+    final isDarkMode = themeMode == ThemeMode.dark;
+
     return Column(
       children: <Widget>[
         Container(
           padding: EdgeInsets.all(16),
-          color: Colors.blue[200],
+          color: isDarkMode ? Colors.grey[800] : Colors.blue[200],
           child: Column(
             children: <Widget>[
               Padding(
@@ -280,6 +290,12 @@ class _TodoListState extends State<TodoList> {
                   decoration: InputDecoration(
                     labelText: 'Enter Task Name',
                     border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
               ),
@@ -288,6 +304,12 @@ class _TodoListState extends State<TodoList> {
                 decoration: InputDecoration(
                   labelText: 'Search tasks',
                   border: OutlineInputBorder(),
+                  labelStyle: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white : Colors.black,
                 ),
                 onChanged: (value) {
                   searchTasks();
@@ -298,7 +320,7 @@ class _TodoListState extends State<TodoList> {
                   IconButton(
                     icon: Icon(Icons.add),
                     onPressed: addTask,
-                    color: Colors.blue,
+                    color: isDarkMode ? Colors.white : Colors.blue,
                   ),
                 ],
               ),
@@ -310,7 +332,10 @@ class _TodoListState extends State<TodoList> {
               ? Center(
                   child: Text(
                     'No matching tasks found.',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
                   ),
                 )
               : ListView.builder(
@@ -319,7 +344,9 @@ class _TodoListState extends State<TodoList> {
                     final todo = filteredTodos[index];
                     return Card(
                       margin: EdgeInsets.all(8),
-                      color: todo.isCompleted ? Colors.green : Colors.white,
+                      color: todo.isCompleted
+                          ? isDarkMode ? Colors.green : Colors.green
+                          : isDarkMode ? Colors.grey : Colors.white,
                       child: ListTile(
                         title: Text(
                           todo.name,
@@ -327,6 +354,7 @@ class _TodoListState extends State<TodoList> {
                             fontSize: 18,
                             decoration:
                                 todo.isCompleted ? TextDecoration.lineThrough : null,
+                            color: isDarkMode ? Colors.white : Colors.black,
                           ),
                         ),
                         trailing: Row(
