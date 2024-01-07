@@ -290,7 +290,7 @@ class FlutterContentsPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Text("1) Adding the element to list"),
             Text("2) Removing an element"),
             Text("3) To find the length of the list in the center of the page"),
